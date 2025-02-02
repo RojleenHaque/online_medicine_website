@@ -1,21 +1,20 @@
-
-
-
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";  // Import useNavigate from react-router-dom
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [userInfo, setUserInfo] = useState({
-    userName: '',
-    email: '',
-    address: ''
+    userName: "",
+    email: "",
+    address: "",
+    city: "",
+    postalCode: "",
+    country: "",
   });
-  const navigate = useNavigate();  // Initialize useNavigate hook
+  const navigate = useNavigate();
 
-  // Load cart items from localStorage on component mount
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCartItems(storedCart);
@@ -28,13 +27,13 @@ const Cart = () => {
         : item
     );
     setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart)); // Update localStorage
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   const handleRemove = (id) => {
     const updatedCart = cartItems.filter((item) => item.id !== id);
     setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart)); // Update localStorage
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   const calculateTotal = () => {
@@ -45,21 +44,22 @@ const Cart = () => {
   };
 
   const handleCheckout = async () => {
-    // Validate input fields
+    console.log("userName: ", userInfo.userName);
+     console.log("email: ", userInfo.email);
     if (!userInfo.userName || !userInfo.email || !userInfo.address) {
       alert("Please fill in all the required fields.");
       return;
     }
-  
+
     const orderData = {
+      userName: userInfo.userName,
+      email: userInfo.email,
       orderItems: cartItems.map((item) => ({
         name: item.name,
         price: item.price,
         quantity: item.quantity,
-      })), 
-      userName: userInfo.userName,
-      email: userInfo.email,
-      shippingAddress: {   
+      })),
+      shippingAddress: {
         address: userInfo.address,
         city: userInfo.city,
         postalCode: userInfo.postalCode,
@@ -67,32 +67,29 @@ const Cart = () => {
       },
       totalPrice: calculateTotal(),
     };
-  
+
     try {
-      // Send POST request to save the order
-      const response = await axios.post("http://localhost:4000/api/orders/create", orderData);
-  
-      // Handle successful response
+      const response = await axios.post(
+        "http://localhost:4000/api/orders/create",
+        orderData
+      );
+
       if (response.status === 201) {
-        alert("Order successfully placed!");
-        setCartItems([]);                     // Clear the cart
-        localStorage.removeItem("cart");      // Clear localStorage
-        // navigate("/payment");                 // Redirect to payment page
+        alert("Order successfully placed! Thanks for shopping with us.");
+        setCartItems([]);
+        localStorage.removeItem("cart");
+        //navigate("/payment");
+        localStorage.setItem("orderId", response.data._id);  // Save orderId in localStorage
+        navigate("/customer-order"); 
       } else {
         alert("Failed to place order. Please try again.");
       }
     } catch (error) {
       console.error("Error during checkout:", error);
-  
-      // Display error message from backend if available
-      if (error.response && error.response.data.message) {
-        alert(`Error: ${error.response.data.message}`);
-      } else {
-        alert("An error occurred while processing your order.");  //////////////////////
-      }
+      alert("An error occurred while processing your order.");
     }
   };
-  
+
   return (
     <div className="container mt-5">
       <h1 className="text-center mb-4">Your Cart</h1>
@@ -164,88 +161,102 @@ const Cart = () => {
             </div>
           </div>
 
-          {/* User Info Form */}
           <div className="user-info-block mt-5">
             <h4>Enter Your Information</h4>
             <form>
               <div className="mb-3">
-                <label htmlFor="userName" className="form-label">Name</label>
+                <label htmlFor="userName" className="form-label">
+                  Name
+                </label>
                 <input
                   type="text"
                   id="userName"
                   className="form-control"
                   value={userInfo.userName}
-                  onChange={(e) => setUserInfo({ ...userInfo, userName: e.target.value })}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, userName: e.target.value })
+                  }
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="email" className="form-label">Email</label>
+                <label htmlFor="email" className="form-label">
+                  Email
+                </label>
                 <input
                   type="email"
                   id="email"
                   className="form-control"
                   value={userInfo.email}
-                  onChange={(e) => setUserInfo({ ...userInfo, email: e.target.value })}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, email: e.target.value })
+                  }
                 />
               </div>
               <div className="mb-3">
-  <label htmlFor="address" className="form-label">Street Address</label>
-  <input
-    type="text"
-    id="address"
-    className="form-control"
-    value={userInfo.address}
-    onChange={(e) => setUserInfo({ ...userInfo, address: e.target.value })}
-    
-  />
-</div>
-
-<div className="mb-3">
-  <label htmlFor="city" className="form-label">City</label>
-  <input
-    type="text"
-    id="city"
-    className="form-control"
-    value={userInfo.city || ""}
-    onChange={(e) => setUserInfo({ ...userInfo, city: e.target.value })}
-    
-  />
-</div>
-
-<div className="mb-3">
-  <label htmlFor="postalCode" className="form-label">Postal Code</label>
-  <input
-    type="text"
-    id="postalCode"
-    className="form-control"
-    value={userInfo.postalCode || ""}
-    onChange={(e) => setUserInfo({ ...userInfo, postalCode: e.target.value })}
-
-  />
-</div>
-
-<div className="mb-3">
-  <label htmlFor="country" className="form-label">Country</label>
-  <input
-    type="text"
-    id="country"
-    className="form-control"
-    value={userInfo.country || ""}
-    onChange={(e) => setUserInfo({ ...userInfo, country: e.target.value })}
-
-  />
-</div>
-
+                <label htmlFor="address" className="form-label">
+                  Street Address
+                </label>
+                <input
+                  type="text"
+                  id="address"
+                  className="form-control"
+                  value={userInfo.address}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, address: e.target.value })
+                  }
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="city" className="form-label">
+                  City
+                </label>
+                <input
+                  type="text"
+                  id="city"
+                  className="form-control"
+                  value={userInfo.city}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, city: e.target.value })
+                  }
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="postalCode" className="form-label">
+                  Postal Code
+                </label>
+                <input
+                  type="text"
+                  id="postalCode"
+                  className="form-control"
+                  value={userInfo.postalCode}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, postalCode: e.target.value })
+                  }
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="country" className="form-label">
+                  Country
+                </label>
+                <input
+                  type="text"
+                  id="country"
+                  className="form-control"
+                  value={userInfo.country}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, country: e.target.value })
+                  }
+                />
+              </div>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleCheckout}
+              >
+                Proceed to Checkout
+              </button>
             </form>
           </div>
-
-          <button
-            className="btn btn-success mt-3"
-            onClick={handleCheckout}
-
-          >
-            Place your order
-          </button>
         </div>
       )}
     </div>

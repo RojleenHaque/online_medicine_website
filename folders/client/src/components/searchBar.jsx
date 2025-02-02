@@ -1,16 +1,13 @@
-
 import React, { useState } from "react";
 
 const SearchBar = ({ onSearch }) => {
   const [searchText, setSearchText] = useState("");
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (onSearch) {
-      // Pass the search text, min and max prices
-      onSearch(searchText, minPrice, maxPrice);
+      // Pass the search text only
+      onSearch(searchText);
     }
   };
 
@@ -25,32 +22,10 @@ const SearchBar = ({ onSearch }) => {
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
-        <div className="price-range">
-          <label>
-            Min Price: 
-            <input
-              type="number"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-              placeholder="Min"
-            />
-          </label>
-          <label>
-            Max Price: 
-            <input
-              type="number"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-              placeholder="Max"
-            />
-          </label>
-          <div className="b">
-            <button type="submit">Search</button>
-          </div>
-        </div>
       </form>
     </div>
   );
 };
 
 export default SearchBar;
+

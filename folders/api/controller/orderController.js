@@ -1,14 +1,12 @@
-import Order from "../models/order.js"; // Import the Order model
-import asyncHandler from "express-async-handler"; // Import async handler
-//import User from "../models/user.js"; // Import the User model for role checks
-import bcrypt from "bcryptjs"; // Import bcrypt for password hashing
-import jwt from "jsonwebtoken"; // Import JWT for authentication
 
-// Create a new order (User authentication required)
+
+import asyncHandler from "express-async-handler";
+import Order from "../models/order.js";
+
+// Create Order
 export const createOrder = asyncHandler(async (req, res) => {
   const { userName, email, orderItems, shippingAddress } = req.body;
 
-  // Validate required fields
   if (!userName || !email) {
     res.status(400);
     throw new Error("User name and email are required.");
@@ -30,63 +28,70 @@ export const createOrder = asyncHandler(async (req, res) => {
     throw new Error("Complete shipping address is required.");
   }
 
-  // Calculate total price
   const totalPrice = orderItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
 
-  try {
-    // Create order
-    const order = new Order({
-      userName,
-      email,
-      orderItems,
-      shippingAddress,
-      totalPrice,
-    });
+  const order = new Order({
+    userName,
+    email,
+    orderItems,
+    shippingAddress,
+    totalPrice,
+    status: "Pending"
+  });
 
-    const createdOrder = await order.save();
-    res.status(201).json(createdOrder);
-  } catch (error) {
-    console.error("Order creation failed:", error);
-    res.status(500).json({ message: "Internal Server Error. Failed to save order." });
-  }
+  const createdOrder = await order.save();
+  res.status(201).json(createdOrder);
 });
 
-// Admin: Track all orders (Admin authentication required)
-export const getAllOrders = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
 
-  // Validate email and password
-  if (!email || !password) {
-    res.status(400);
-    throw new Error("Email and password are required.");
-  }
-
+//to see all orders in admin panel
+export const getAllOrders = async (req, res) => {
   try {
-    // Find admin user by email
-    const adminUser = await User.findOne({ email });
-
-    // Check if user exists and is an admin
-    if (!adminUser || adminUser.role !== "admin") {
-      res.status(403);
-      throw new Error("Access denied. Admin privileges required.");
-    }
-
-    // Verify password
-    const isMatch = await bcrypt.compare(password, adminUser.password);
-    if (!isMatch) {
-      res.status(401);
-      throw new Error("Invalid email or password.");
-    }
-
-    // Fetch all orders if authentication is successful
     const orders = await Order.find({});
-    res.status(200).json(orders);
+    console.log("Orders:", orders);  // Log the orders to check
+    res.json(orders);
   } catch (error) {
-    console.error("Failed to fetch orders:", error);
-    res.status(500).json({ message: "Internal Server Error." });
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ message: "Server Error" });
   }
+};
+
+
+//update status 
+export const updateOrderStatus = async (req, res) => {
+  const { orderId, status } = req.body;  // Accept 'status' as part of the request body
+
+  if (!orderId || !status) {
+    return res.status(400).json({ error: "OrderId and status are required" });
+  }
+  const order = await Order.findById(orderId);
+  if (!order) {
+    return res.status(404).json({ error: "Order not found" });
+  }
+
+  // Validate the status
+  if (!["Approved", "Canceled"].includes(status)) {
+    return res.status(400).json({ error: "Invalid status" });
+  }
+
+  // Update the status
+  order.status = status;
+  await order.save();
+
+  return res.status(200).json({ message: `Order ${status.toLowerCase()}`, order });
+};
+
+/// for user to se their individual order
+export const getOrderById = asyncHandler(async (req, res) => {
+  const { orderId } = req.params; // Get orderId from the URL
+  const order = await Order.findById(orderId); // Find the order by ID
+
+  if (!order) {
+    return res.status(404).json({ message: "Order not found" });
+  }
+
+  res.json(order); 
 });
-// export { createOrder, getAllOrders };

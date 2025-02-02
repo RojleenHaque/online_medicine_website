@@ -8,85 +8,45 @@ const SignUp = () => {
     name: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    confirmPassword: "", // Added confirmPassword
   });
-
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { name, email, password, confirmPassword } = formData;
 
-   const { name, email, password, confirmPassword } = formData;
-
-    // Validation
-    if (!name || !email || !password || !confirmPassword) {
-      setError("All fields are required.");
-      return;
-    }
-
+    // Check if passwords match
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
 
-    // Password strength validation
-    const strongPasswordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
-    if (!strongPasswordRegex.test(password)) {
-      setError(
-        "Password must be at least 6 characters long and include 1 uppercase, 1 lowercase, 1 number, and 1 special character."
-      );
+    // Check for empty fields
+    if (!name || !email || !password || !confirmPassword) {
+      setError("All fields are required.");
       return;
     }
 
-    setError(""); // Clear previous errors
+    setError("");
 
     try {
-      // Send signup request to backend
-      const response = await axios.post(
-        "http://localhost:4000/api/users/register",
-        {
-          name,
-          email,
-          password,
-        }
-      );
+      const response = await axios.post("http://localhost:4000/api/users/register", {
+        name,
+        email,
+        password,
+      });
 
-      if (response.status === 201) {
-        setSuccess("Signup successful!");
-        localStorage.setItem("token", response.data.token); // Store token in local storage
-
-        if (response.data.token) {
-          localStorage.setItem("token", response.data.token); // Store token in localStorage
-          setSuccess("Signup successful!");
-        } else {
-          setError("Token not received. Please try again.");
-        }
-
-        // Clear the form after success
-        setFormData({
-          name: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-        });
-      }
-    } catch (error) {
-      console.error("Error during signup:", error.response ? error.response : error.message);
-    
-      // Display detailed error from the backend
-      setError(
-        error.response?.data?.message ||
-          "An error occurred while processing your signup. Please try again."
-      );
+      setSuccess(response.data.message);
+      localStorage.setItem("token", response.data.token); // Store token on successful signup
+    } catch (err) {
+      setError(err.response?.data?.message || "Server error. Please try again.");
     }
   };
   return (

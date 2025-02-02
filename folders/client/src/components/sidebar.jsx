@@ -1,9 +1,4 @@
-import { useState } from "react";
-
 const Sidebar =()=> {
-
-  
-
   return (
     <>
     <div className="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" >
@@ -38,16 +33,6 @@ const Sidebar =()=> {
         </a>
       </li>
       <li>
-        <a href="#" class="nav-link link-body-emphasis">
-          <svg class="bi pe-none me-2" width="16" height="16"><use xlinkHref="#grid"></use></svg>
-          Women's health
-        </a>
-      </li>
-      <li>
-        <a href="#" class="nav-link link-body-emphasis">
-          <svg class="bi pe-none me-2" width="16" height="16"><use xlinkHref="#people-circle"></use></svg>
-          Men's health
-        </a>
       </li>
     </ul>
     <hr/>

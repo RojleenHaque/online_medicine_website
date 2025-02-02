@@ -23,12 +23,12 @@ const Dashboard = () => {
     <div className="dashboard-container">
     <h1 class="dash-board-z">Admin panel</h1>
       <div className="dashboard-block">
-        <h2>View all the Products</h2>
+        <h2>View Previous Products</h2>
         <button onClick={handleViewProducts}>View</button>
       </div>
 
       <div className="dashboard-block">
-        <h2>Add new items</h2>
+        <h2>Add new products</h2>
         <button onClick={handleAddItem}>add</button>
       </div>
 

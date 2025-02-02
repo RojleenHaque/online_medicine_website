@@ -1,14 +1,15 @@
 import express from "express";
 const router = express.Router();
-import { createOrder, getAllOrders } from "../controller/orderController.js";
+import { createOrder, getAllOrders,updateOrderStatus,getOrderById } from "../controller/orderController.js";
 
-
-// to create an order
+// Route to create an order
 router.post("/create", createOrder);
 
-// to tarck 
-router.post("/track", getAllOrders);
+// Route to track an order by Order ID
+router.get("/track", getAllOrders);
 
+router.put("/update", updateOrderStatus);
 
+router.get('/get/:orderId', getOrderById); 
 export default router;
 

@@ -1,9 +1,5 @@
-
-
-// export default connectDB;
-
 import mongoose from "mongoose";
-import dotenv from "dotenv";
+import dotenv from "dotenv"; //to load environment varriable from env
 
 dotenv.config(); // Load environment variables
 
@@ -17,7 +13,6 @@ const connectDB = async () => {
 
     // Connect without deprecated options
     await mongoose.connect(dbURI);
-
     console.log("MongoDB connected successfully");
 
     // Optional: Handle errors during runtime
@@ -27,7 +22,7 @@ const connectDB = async () => {
 
   } catch (error) {
     console.error("Error connecting to MongoDB:", error.message);
-    process.exit(1); // Exit on failure
+    process.exit(1); 
   }
 };
 

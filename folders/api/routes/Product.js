@@ -1,24 +1,87 @@
 
-
-
 import express from 'express';
-import { addProduct, listProduct, removeProduct, singleProduct } from '../controller/producController.js';
-import upload from '../middleware/multer.js'; // Ensure you have a valid multer middleware
-import { adminAuth } from '../middleware/auth.js';
+import multer from 'multer';
+import path from 'path';
+import Product from '../models/product.js';
+import { v2 as cloudinary } from 'cloudinary';
+import fs from 'fs';  // For deleting temporary files
 
-const productRoute = express.Router();
+const storage = multer.diskStorage({  //multer
+  destination: (req, file, cb) => {
+    const uploadDir = './upload';
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir); 
+    }
+    cb(null, uploadDir);  
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));  
+  },
+});
 
-// Add product route with image upload
-// productRoute.post('/add', adminAuth, upload.single('image'), addProduct);
-productRoute.post('/add', adminAuth, addProduct);
+const upload = multer({ storage: storage });
 
-// List all products route
-productRoute.get('/list', adminAuth, listProduct);
+const productRouter = express.Router();
 
-// Remove a product route
-productRoute.delete('/remove', adminAuth, removeProduct);
+//upload to cloudinary
+const uploadToCloudinary = async (filePath) => {
+  try {
+    const result = await cloudinary.uploader.upload(filePath, {
+      folder: "products",  // Folder to store in Cloudinary
+    });
+    console.log("Cloudinary Upload Result:", result);  // Log result for debugging
+    return result.secure_url;
+  } catch (error) {
+    console.error("Error uploading image to Cloudinary:", error.message);  // Log the error message
+    throw new Error("Error uploading image to Cloudinary.");
+  }
+};
 
-// Get a single product route
-productRoute.get('/single', adminAuth, singleProduct);
 
-export default productRoute;
+
+// Add a new product 
+productRouter.post("/add", upload.single('image'), async (req, res) => {
+  const { name, description, price, discountPrice } = req.body;
+  const image = req.file.path;  // Multer stores the file temporarily in 'req.file'
+
+  if (!name || !description || !price || !discountPrice) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+
+  try {
+    const imageUrl = await uploadToCloudinary(image);
+
+    const product = new Product({
+      name,
+      description,
+      price,
+      discountPrice,
+      image: imageUrl,
+    });
+    const savedProduct = await product.save();
+    res.status(201).json(savedProduct);  
+    fs.unlinkSync(image);
+  } catch (error) {
+    console.error("Error saving product:", error);
+    res.status(500).json({ message: "Failed to add product." });
+  }
+});
+
+
+
+// get one product
+productRouter.get("/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.status(200).json(product);
+  } catch (error) {
+    console.error("Error fetching product by ID:", error);
+    res.status(500).json({ message: "Failed to fetch product." });
+  }
+});
+
+
+ export default productRouter;

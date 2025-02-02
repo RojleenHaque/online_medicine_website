@@ -6,12 +6,12 @@ import express from "express";
 import userController from "../controller/userController.js"; // Import the default export
 
 const userRouter = express.Router();
-const { loginUser, adminLogin, registerUser } = userController; // Destructure
+const {Login, registerUser } = userController; // Destructure
 
-userRouter.post('/register', registerUser);  // Use registerUser here
-userRouter.post('/login', loginUser);
+userRouter.post('/register',registerUser);  // Use registerUser here
+userRouter.post('/login',Login);
 //admin
-userRouter.post('/admin', adminLogin);
+//userRouter.post('/admin',userController.adminLogin);
 
 export default userRouter;
 

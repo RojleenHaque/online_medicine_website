@@ -17,9 +17,8 @@ const PersonalCare = () => {
       name: 'Listacare Blue Mint',
       size: '120 ml',
       type: 'Mouthwash',
-      ingredient: 'Menthol + Thymol',
+      description: 'Menthol + Thymol',
       price: 72.00,
-      description: 'Provides fresh breath and oral hygiene.',
       image: listacareImage
     },
     {
@@ -27,9 +26,8 @@ const PersonalCare = () => {
       name: 'Lister Gold',
       size: '120 ml',
       type: 'Mouthwash',
-      ingredient: 'Menthol + Thymol',
+      description: 'Menthol + Thymol',
       price: 72.00,
-      description: 'Gold-standard mouthwash for daily care.',
       image: listerGoldImage
     },
     {
@@ -37,9 +35,8 @@ const PersonalCare = () => {
       name: 'MediPlus',
       size: '140 gm',
       type: 'Toothpaste',
-      ingredient: 'Ultimate Dental Care',
+      description: 'Ultimate Dental Care',
       price: 85.50,
-      description: 'Ensures complete dental protection.',
       image: mediPlusImage
     },
     {
@@ -47,9 +44,8 @@ const PersonalCare = () => {
       name: 'Orastar Plus',
       size: '250 ml',
       type: 'Mouthwash',
-      ingredient: 'Eucalyptol + Menthol',
+      description: 'Eucalyptol + Menthol',
       price: 135.00,
-      description: 'Antiseptic mouthwash for gum care.',
       image: orastarImage
     }
   ];
@@ -78,8 +74,7 @@ const PersonalCare = () => {
               <span className="span1">{product.name}</span>
               <span className="span2">{product.size}</span><br />
               {product.type}<br />
-              <span className="span3">{product.ingredient}</span><br />
-              <p>{product.description}</p>
+              <span className="span3">{product.description}</span><br />
             </div>
 
             <div className="cart">

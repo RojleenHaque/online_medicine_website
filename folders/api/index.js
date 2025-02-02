@@ -4,25 +4,24 @@ import cors from 'cors'
 import 'dotenv/config'
 import connectDB from './config/mongodb.js'
 import userRouter from './routes/User.js'
-import productRoute from './routes/Product.js'
+import productRouter from './routes/Product.js'
 import connectCloudinary from './config/cloudinary.js'
 import orderRoute from './routes/Order.js'
 
 
 const app=express()
 const PORT=process.env.PORT|| 4000
-
-connectDB() //connect mongodb
-connectCloudinary();
-
-app.use(express.json())
 app.use(
     cors({
-       origin: "http://localhost:5174", // Allow requests only from this origin
-       methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
-       allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+      //  origin: "http://localhost:5174", // Allow requests only from this origin
+      //  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+      //  allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
     })
   );
+  app.use(express.json())
+
+ connectDB() //connect mongodb
+connectCloudinary();
 
 
 //endpoints
@@ -38,7 +37,7 @@ app.get("/", (req, res) =>{
 app.use('/api/users', userRouter);
 
 // //route for product
-app.use("/api/products",productRoute); //in frontend
+app.use("/api/products",productRouter); //in frontend
 
 //route for order
 app.use("/api/orders",orderRoute);

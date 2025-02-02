@@ -15,9 +15,8 @@ const OTCMedicine = () => {
       name: 'Alatrol',
       dose: '10 mg',
       type: 'Tablet',
-      ingredient: 'Cetirizine Hydrochloride [Oral]',
+      description: 'Cetirizine Hydrochloride [Oral]',
       price: 2.30,
-      description: 'Used to treat allergies and hay fever.',
       image: alatrolImage
     },
     {
@@ -25,9 +24,8 @@ const OTCMedicine = () => {
       name: 'Burna',
       dose: '1%',
       type: 'Cream',
-      ingredient: 'Silver Sulfadiazine',
+      description: 'Silver Sulfadiazine',
       price: 54.50,
-      description: 'Used for burns and wound infections.',
       image: burnaImage
     },
     {
@@ -35,9 +33,8 @@ const OTCMedicine = () => {
       name: 'Napa',
       dose: '500 mg',
       type: 'Tablet',
-      ingredient: 'Paracetamol',
+      description: 'Paracetamol',
       price: 1.08,
-      description: 'Used for pain relief and fever reduction.',
       image: napaImage
     },
     {
@@ -45,16 +42,15 @@ const OTCMedicine = () => {
       name: 'Viodin',
       dose: '10%',
       type: 'Solution',
-      ingredient: 'Povidone Iodine',
+      description: 'Povidone Iodine',
       price: 108.00,
-      description: 'Used as an antiseptic for skin disinfection.',
       image: viodinImage
     }
   ];
 
   const handleAddToCart = (product) => {
     localStorage.setItem('cart', JSON.stringify([{ ...product, quantity: 1 }]));
-    navigate('/cart','_blank');
+    navigate('/cart', '_blank');
   };
 
   return (
@@ -76,8 +72,7 @@ const OTCMedicine = () => {
               <span className="span1">{product.name}</span>
               <span className="span2">{product.dose}</span><br />
               {product.type}<br />
-              <span className="span3">{product.ingredient}</span><br />
-              <p>{product.description}</p>
+              <span className="span3">{product.description}</span><br />
             </div>
 
             <div className="cart">
