@@ -42,10 +42,10 @@ Follow these steps to set up and run the project locally.
 ### Prerequisites
 Before you begin, ensure you have the following installed:
 - **Node.js** 
-- **npm** 
+- **npm**
 - **MongoDB** 
 - **Cloudinary**
-- 
+
 ### Installation
 1. **Clone the Repository**
    ```bash
