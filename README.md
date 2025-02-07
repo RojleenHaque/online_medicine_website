@@ -70,10 +70,10 @@ CLOUDINARY_API_KEY=364498421858822
 CLOUDINARY_API_SECRET=djEnTonVkiA8rCCFys8HZISIolM
 
 Run the Application
-# Start the backend server
+## Start the backend server
 cd api
 npm start server
-# Start the frontend development server
+## Start the frontend development server
 cd ../client
 npm run dev
 
