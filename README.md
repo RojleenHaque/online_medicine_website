@@ -36,6 +36,7 @@ The **Online Medicine Delivery System** is a web-based application designed to f
 
 ---
 
+
 ## Getting Started
 Follow these steps to set up and run the project locally.
 ### Prerequisites
@@ -50,6 +51,7 @@ Before you begin, ensure you have the following installed:
    ```bash
    git clone https://github.com/RojleenHaque/online_medicine_website.git
    cd online_medicine_website
+   
 Install Dependencies
 2. **Install backend dependencies**
 cd api
@@ -70,10 +72,10 @@ CLOUDINARY_API_SECRET=djEnTonVkiA8rCCFys8HZISIolM
 Run the Application
 # Start the backend server
 cd api
-npm start
+npm start server
 # Start the frontend development server
 cd ../client
-npm start
+npm run dev
 
 Access the Application
 Open your browser and navigate to http://localhost:5173 to access the frontend.
