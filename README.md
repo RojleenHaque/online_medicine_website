@@ -13,7 +13,7 @@ The **Online Medicine Delivery System** is a web-based application designed to f
 2. **Cart Page**
    - Users can add medicines to their cart and place orders.
 3. **Order Placement**
-   - Users can place orders for the medicines in their cart.
+   - Users can see the status of their order either it is accepted or deleted.
 4. **Order Status Tracking**
    - Users can track the status of their orders (e.g., pending, accepted).
 
