@@ -11,19 +11,21 @@ The **Online Medicine Delivery System** is a web-based application designed to f
 1. **User Registration and Login**
    - Users can create an account and log in securely using JWT-based authentication.
 2. **Cart Page**
-   - Users can add medicines to their cart and place orders.
-3. **Order Placement**
-   - Users can see the status of their order either it is accepted or deleted.
+   - Users can add medicines to their cart and order multiple products at a time.
+3. **Order Placement**.
+   - Users can place an order by providing their shipping address, name, and email.
 4. **Order Status Tracking**
-   - Users can track the status of their orders (e.g., pending, accepted).
+   - Users can see the status of their order either it is aprroved or cancelled.
+5. **Advance Searching**
+   - Users can search for products by name (case-sensitive) in the search bar and add products to their cart directly from the search results.
 
 ### Admin Features
 1. **Admin Dashboard**
-   - Admins have access to a dedicated dashboard to manage the system.
+   - Admins have access to a dedicated dashboard to manage the system. To access the dashboard, admins must log in with an authenticated email ID and password.
 2. **Product Management**
-   - Admins can view the list of products and add and delete products to the inventory.
+   - Admins can view the list of products,add and delete products to the inventory.
 3. **Order Management**
-   - Admins can accept or delete user orders.
+   - Admins can accept or cancel user orders.
    - Admins can update the status of orders to keep users informed.
 
 ### Technical Features
@@ -53,11 +55,14 @@ Before you begin, ensure you have the following installed:
    cd online_medicine_website
    
 Install Dependencies
-2. **Install backend dependencies**
+2. **Navigate to the project directory**
+cd online-medicine-delivery
+
+3. **Install backend dependencies**
 cd api
 npm install
 
-3. **Install frontend dependencies**
+4. **Install frontend dependencies**
 cd ../client
 npm install
 Set Up Environment Variables
